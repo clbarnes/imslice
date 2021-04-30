@@ -11,7 +11,7 @@ setup(
     description="Slice a 3D volume with a 2D arbitrary plane",
     long_description=readme,
     long_description_content_type="text/markdown",
-    packages=find_packages(include=["imslice"]),
+    packages=find_packages(include=["imslice*"]),
     install_requires=["numpy", "scipy"],
     python_requires=">=3.7, <4.0",
     classifiers=[
