@@ -1,5 +1,8 @@
 from pathlib import Path
+
 import numpy as np
+from matplotlib.axes import Axes
+from matplotlib import pyplot as plt
 
 from imslice import Scene
 
@@ -35,8 +38,6 @@ snaps["yaw90"] = scene.snap()
 
 # %%
 
-from matplotlib.axes import Axes
-from matplotlib import pyplot as plt
 
 fig, ax_arr = plt.subplots(2, 2)
 ax: Axes
