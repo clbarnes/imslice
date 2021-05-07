@@ -27,17 +27,13 @@ def noop(arg):
 
 
 class Camera:
-    def __init__(self, width: int, height: int, transformation: Optional[Callable[[np.ndarray], np.ndarray]] = None):
+    def __init__(self, width: int, height: int):
         """width, height describe the viewport in pixels.
-
-        transformation is a callable which takes world units and converts to pixel units.
-        Its input and output should be 3xHxW.
         """
         self.width = int(width)
         self.height = int(height)
         half_width = self.width / 2
         half_height = self.height / 2
-        self.transformation = transformation or noop
 
         # todo: initialise corners in world units
 
@@ -100,8 +96,7 @@ class Camera:
         bottom_row = np.linspace(
             self.bottom_left, self.bottom_right, self.width, False, axis=1
         )
-        out = np.linspace(top_row, bottom_row, self.height, False, axis=1)
-        return self.transformation(out)
+        return np.linspace(top_row, bottom_row, self.height, False, axis=1)
 
     @property
     def scale_level(self):

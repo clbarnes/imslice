@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Optional, Callable
 
 from scipy.ndimage import map_coordinates
 import numpy as np
@@ -10,12 +10,17 @@ from .camera import Camera
 logger = logging.getLogger(__name__)
 
 
+def null_transform(coords):
+    return coords
+
+
 class Scene:
     def __init__(
         self,
         array: np.ndarray,
         width: int,
         height: int,
+        transform: Optional[Callable[[np.ndarray], np.ndarray]] = None,
         channel_dim: Optional[int] = None,
         interp_order=0,
         extrap_mode="constant",
@@ -23,6 +28,7 @@ class Scene:
         camera_on=True,
     ):
         self.array = array
+        self.transform = transform or null_transform
         self.camera = Camera(width, height)
         self.channel_dim = channel_dim
         self.interp_order = interp_order
@@ -44,7 +50,7 @@ class Scene:
     def _snap_single(self, array, coords, output=None):
         return map_coordinates(
             array,
-            coords,
+            self.transform(coords),
             output=output,
             order=self.interp_order,
             mode=self.extrap_mode,
