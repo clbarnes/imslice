@@ -12,7 +12,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     packages=find_packages(include=["imslice*"]),
-    install_requires=["numpy", "scipy"],
+    install_requires=["numpy", "scipy", "strictyaml"],
     python_requires=">=3.7, <4.0",
     classifiers=[
         "Development Status :: 3 - Alpha",

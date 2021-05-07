@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
 import logging
+from typing import Optional, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +22,24 @@ def rot_unit(degrees=True):
     return ("radians", "degrees")[degrees]
 
 
+def noop(arg):
+    return arg
+
+
 class Camera:
-    def __init__(self, width: int, height: int):
-        """point, direction, orientation given as zyx"""
+    def __init__(self, width: int, height: int, transformation: Optional[Callable[[np.ndarray], np.ndarray]] = None):
+        """width, height describe the viewport in pixels.
+
+        transformation is a callable which takes world units and converts to pixel units.
+        Its input and output should be 3xHxW.
+        """
         self.width = int(width)
         self.height = int(height)
         half_width = self.width / 2
         half_height = self.height / 2
+        self.transformation = transformation or noop
+
+        # todo: initialise corners in world units
 
         self._mat = np.array(
             [
@@ -89,9 +101,7 @@ class Camera:
             self.bottom_left, self.bottom_right, self.width, False, axis=1
         )
         out = np.linspace(top_row, bottom_row, self.height, False, axis=1)
-        if out is None:
-            logger.critical("NoneType coords")
-        return out
+        return self.transformation(out)
 
     @property
     def scale_level(self):
